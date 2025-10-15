@@ -3,7 +3,7 @@ const fs = require('fs');
 module.exports = {
   config: {
     name: "اقتباس",
-    author: "حسين يعقوبي",
+    author: "باتشيرا",
     aliases: ["aniquot"],
     category: "أنمي",
     shortDescription: {
