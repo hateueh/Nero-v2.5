@@ -35,7 +35,7 @@ module.exports = {
 			let msg = "";
 
 			msg += `╔═══════════════╗
-💫NERO  LIST 💫
+💫BACHI  LIST 💫
 ╚═══════════════╝`;
 
 			for (const [name, value] of commands) {
