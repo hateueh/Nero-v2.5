@@ -5,7 +5,7 @@ module.exports = {
         name: "عبارة",
         aliases: ["اقتباس", "عبارة", "قول", "كلمة"],
         version: "1.0",
-        author: "باتشيرا الاناا& عبودي",
+        author: "باتشيرا الانا & ",
         countDown: 5,
         role: 0,
         shortDescription: { ar: "جلب اقتباس عشوائي من Kalimat API" },
