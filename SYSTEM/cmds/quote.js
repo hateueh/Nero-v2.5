@@ -24,7 +24,7 @@ module.exports = {
     onStart: async function({ api, event, getLang }) {
         const API_TOKEN = "20|Z4DU8pRTEqlWvQ1jqrFicbtSP4uQYuHyqZGmB1iSf0d9fd3c";
 
-        const url = "https://kalimatapi.com/api/v1/quotes/today";
+        const url = "https://kalimatapi.com/api/v1/quotes";
         const headers = {
             "Authorization": `Bearer ${API_TOKEN}`,
             "Content-Type": "application/json"
