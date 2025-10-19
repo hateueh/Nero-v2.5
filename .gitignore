@@ -1,0 +1,7 @@
+# ملفات الإعداد الحساسة والخاصة بالبيئة المحلية (لا يجب نشرها)
+account.txt
+.env
+
+# مجلدات Node.js الشائعة
+node_modules
+npm-debug.log
