@@ -4,7 +4,7 @@ module.exports = {
   config: {
     name: "باتشي",
     aliases: ["gimini", "gmini", "باتشي"],
-    version: "1.1",
+    version: "1.2",
     author: "باتشيرا الانا 🧠✨",
     countDown: 5,
     role: 0,
@@ -23,10 +23,10 @@ module.exports = {
       const msg = event.body?.trim();
       if (!msg) return;
 
-      // يتحقق إذا الرسالة تبدأ بـ "باتشي"
+      // ✅ يتحقق إذا الرسالة تبدأ بـ "باتشي"
       if (!msg.toLowerCase().startsWith("باتشي")) return;
 
-      // يستخرج السؤال بعد كلمة "باتشي"
+      // 📝 يستخرج السؤال بعد كلمة "باتشي"
       const prompt = msg.slice("باتشي".length).trim();
       if (prompt.length === 0) return;
 
@@ -36,27 +36,33 @@ module.exports = {
       // 🔑 حط مفتاح Google Gemini API حقك هنا
       const API_KEY = "YOUR_GEMINI_API_KEY";
 
-      // إرسال الطلب إلى Gemini API
+      // 📡 إرسال الطلب إلى Gemini API بالرابط الصحيح
       const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
         {
           contents: [
             {
               parts: [{ text: finalPrompt }]
             }
           ]
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": API_KEY
+          }
         }
       );
 
-      // استخراج الرد
+      // ✨ استخراج الرد من الرد القادم من Gemini
       const replyText =
         response.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
         "هااااااا 😳🎀؟";
 
-      // إرسال الرد للقروب
+      // 💬 إرسال الرد للقروب
       return api.sendMessage(replyText, event.threadID, event.messageID);
     } catch (err) {
-      console.error("❌ خطأ في باتشيAI:", err);
+      console.error("❌ خطأ في باتشيAI:", err.response?.data || err.message);
       return api.sendMessage("🥺💔 صار شي غلط يا قلبي، جرب بعدين 🎀", event.threadID, event.messageID);
     }
   }
