@@ -2,25 +2,25 @@ const fs = require("fs-extra");
 const axios = require("axios");
 const path = require("path");
 const { getPrefix } = global.utils;
-const { commands, aliases } = global.NeroBot;
-const doNotDelete = "[ 🐐 | Nero ]";
+const { commands, aliases } = global.NeroBot; // لا تغيّر الاسم لو يعتمد عليه النظام
+const doNotDelete = "[ 🩷 | Bachi ]";
 
 module.exports = {
   config: {
     name: "اوامر",
-    version: "1.17",
-    author: "NTKhang", 
+    version: "1.18",
+    author: "باتشيرا الانا 🎀",
     countDown: 5,
     role: 0,
     shortDescription: {
-      ar: "عرض استخدام الأوامر وسرد كافة الأوامر مباشرة",
+      ar: "قائمة الأوامر الكيوت 💖",
     },
     longDescription: {
-      ar: "عرض استخدام الأوامر وسرد كافة الأوامر مباشرة",
+      ar: "يعرض كل أوامر البوت بتنسيق أنيق وكيوت 🎀",
     },
     category: "النظام",
     guide: {
-      ar: "{pn} / أوامر إسم الأمر ",
+      ar: "{pn} أو {pn} اسم_الأمر لعرض التفاصيل 🌸",
     },
     priority: 1,
   },
@@ -33,78 +33,80 @@ module.exports = {
     if (args.length === 0) {
       const categories = {};
       let msg = "";
-      msg += `╔═══════════════╗ 💫BACHI LIST 💫 ╚═══════════════╝`;
+      msg += `🌸✨ 〘 قائمة أوامر Bachi 💖 〙 ✨🌸\n\n`;
 
       for (const [name, value] of commands) {
         if (value.config.role > 1 && role < value.config.role) continue;
-        const category = value.config.category || "Uncategorized";
+        const category = value.config.category || "غير مصنف";
         categories[category] = categories[category] || { commands: [] };
         categories[category].commands.push(name);
       }
 
-      Object.keys(categories).forEach(category => {
-        if (category !== "شرح") {
-          msg += ` │『 ${category.toUpperCase()} 』`;
-          const names = categories[category].commands.sort();
-          for (let i = 0; i < names.length; i += 1) {
-            const cmds = names.slice(i, i + 1).map(item => `│⚜️${item}`);
-            msg += ` ${cmds.join(" ".repeat(Math.max(0, 5 - cmds.join("").length)))}`;
-          }
-          msg += ` `;
+      for (const [category, data] of Object.entries(categories)) {
+        msg += `🍓 ⊹･ﾟ﹕${category.toUpperCase()}﹕･ﾟ⊹ 🍓\n`;
+        const sorted = data.commands.sort();
+        for (const cmd of sorted) {
+          msg += `  💫 • ${cmd}\n`;
         }
-      });
+        msg += "\n";
+      }
 
-      const totalCommands = commands.size;
-      msg += ` حاليا البوت لديه ${totalCommands} أمر يمكن إستخدامه `;
-      msg += `أكتب ${prefix} أوامر من أجل أن ترى كيفية إستخدام ذالك الأمر `;
-      msg += `✨ | Nero bot`;
-      await message.reply(msg);
+      const total = commands.size;
+      msg += `━━━━━━━━━━━━━━━━━━━\n`;
+      msg += `✨ عدد الأوامر الكلي: ${total}\n`;
+      msg += `💬 اكتب: ${prefix} اوامر [اسم_الأمر] لمعرفة التفاصيل.\n`;
+      msg += `🌷 صُنع بحب من باتشيرا الانا 🩷`;
+
+      return message.reply(msg);
     } else {
       const commandName = args[0].toLowerCase();
       const command = commands.get(commandName) || commands.get(aliases.get(commandName));
 
       if (!command) {
-        await message.reply(` ❓ | الأمر "${commandName}" لم يتم إيجاده.`);
-      } else {
-        const configCommand = command.config;
-        const roleText = roleTextToString(configCommand.role);
-        const author = configCommand.author || "Unknown";
-        const longDescription = configCommand.longDescription ? configCommand.longDescription.ar || "لا وصف" : "No description";
-        const guideBody = configCommand.guide?.ar || "لا يوجد إرشاد في هذا الأمر.";
-        const usage = guideBody.replace(/{p}/g, prefix).replace(/{n}/g, configCommand.name);
-
-        const response = `╭── الإسم ────⭓
-        │ ${configCommand.name}
-        ├── معلومات
-        │ الوصف: ${longDescription}
-        │ أسماء أخرى : ${configCommand.aliases ? configCommand.aliases.join(", ") : "لا أملك "}
-        │ أسماء اخرى في مجموعتك لا أملك: لا أملك
-        │ الإصدار : ${configCommand.version || "1.0"}
-        │ الصلاحية : ${roleText}
-        │ وقت الإنتظار : ${configCommand.countDown || 1} ثانية
-        │ المؤلف : ${author}
-        ├── كيفية الاستخدام
-        │ ${usage}
-        ├── ملاحظة
-        │ المحتوى داخل المعقوفتين <XXXXX> يمكن تغييرها
-        │ المحتوى داخل [a|b|c] هو a أو b أو c
-        ╰━━━━━━━❖`;
-
-        await message.reply(response);
+        return message.reply(`❓ يا قلبي ما لقيت أمر بهذا الاسم "${commandName}" 😢`);
       }
+
+      const c = command.config;
+      const roleText = roleToText(c.role);
+      const author = c.author || "غير معروف";
+      const desc = c.longDescription?.ar || "مافي وصف متاح 😭";
+      const guide = c.guide?.ar || "مافي شرح 😿";
+      const usage = guide.replace(/{p}/g, prefix).replace(/{n}/g, c.name);
+
+      const response = `
+🌸✨〘 معلومات الأمر 〙✨🌸
+━━━━━━━━━━━━━━━━━━━
+💖 الاسم: ${c.name}
+🌼 الوصف: ${desc}
+💫 أسماء أخرى: ${c.aliases?.join(", ") || "مافي"}
+🧠 الإصدار: ${c.version || "1.0"}
+🔒 الصلاحية: ${roleText}
+⏰ وقت الانتظار: ${c.countDown || 1} ثانية
+👑 المؤلف: ${author}
+━━━━━━━━━━━━━━━━━━━
+📘 الاستخدام:
+${usage}
+━━━━━━━━━━━━━━━━━━━
+🎀 ملاحظة:
+الكلام داخل < > تقدر تغيّره، وداخل [a|b] تختار واحد منهم 💡
+━━━━━━━━━━━━━━━━━━━
+✨ من قلب باتشي 💞
+`;
+
+      return message.reply(response);
     }
   },
 };
 
-function roleTextToString(roleText) {
-  switch (roleText) {
+function roleToText(role) {
+  switch (role) {
     case 0:
-      return "0 (الجميع)";
+      return "👤 الكل";
     case 1:
-      return "1 (فقط الآدمن)";
+      return "🛠️ المشرفين فقط";
     case 2:
-      return "2 (المطور)";
+      return "👑 المطور فقط";
     default:
-      return "مجهول";
+      return "مجهول 😿";
   }
 }
