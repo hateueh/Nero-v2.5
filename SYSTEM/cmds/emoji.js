@@ -17,14 +17,14 @@ const emojis = {
   وقت: ["⏰", "⌛", "🕒", "📅", "⏱️"],
 };
 
-let activeGames = {}; // حفظ اللعبة الحالية حسب المجموعة
+let activeGames = {};
 
 module.exports = {
   config: {
     name: "احزر_الايموجي",
     aliases: ["emoji", "guess_emoji"],
-    version: "1.2",
-    author: "عبودي و إلهامي 🎀",
+    version: "1.3",
+    author: "باتشيرا الانا🍭",
     countDown: 5,
     role: 0,
     shortDescription: "لعبة احزر الإيموجي 🎀",
@@ -33,10 +33,10 @@ module.exports = {
     guide: "{pn}"
   },
 
+  // بداية اللعبة
   onStart: async function({ api, event, message }) {
     const threadID = event.threadID;
 
-    // لو في لعبة شغالة بالفعل في المجموعة
     if (activeGames[threadID]) {
       return message.reply("😭🎀 في لعبة شغالة بالفعل، اصبر شوي يا مشاغب!");
     }
@@ -45,14 +45,13 @@ module.exports = {
     const randomWord = words[Math.floor(Math.random() * words.length)];
     const correctEmojis = emojis[randomWord];
 
-    // حفظ اللعبة في الذاكرة
     activeGames[threadID] = { word: randomWord, answers: correctEmojis };
 
     message.reply(
       `🎀🍭 احزر الإيموجي المناسب للكلمة التالية:\n\n💬 الكلمة: "${randomWord}"\n\nأول واحد يرسل الإيموجي الصحيح يفوز 😆❤️‍🔥`
     );
 
-    // حذف اللعبة بعد 15 ثانية إذا ما أحد جاوب
+    // ينتهي الوقت بعد 15 ثانية
     setTimeout(() => {
       if (activeGames[threadID]) {
         message.reply(
@@ -63,8 +62,8 @@ module.exports = {
     }, 15000);
   },
 
-  // التحقق من إجابات اللاعبين
-  onChat: async function({ event, message, api }) {
+  // التحقق من الردود (استبدلنا onChat بـ onMessage)
+  onMessage: async function({ event, message, api }) {
     const threadID = event.threadID;
     const currentGame = activeGames[threadID];
     if (!currentGame) return;
@@ -72,10 +71,13 @@ module.exports = {
     const userAnswer = event.body.trim();
 
     if (currentGame.answers.includes(userAnswer)) {
-      const userName = (await api.getUserInfo(event.senderID))[event.senderID]?.name || "لاعب مجهول 🎀";
+      const userName =
+        (await api.getUserInfo(event.senderID))[event.senderID]?.name ||
+        "لاعب مجهول 🎀";
 
-      message.reply(`🎉 مبرووووك ${userName}! 😍❤️‍🔥  
-عرفت الإيموجي الصحيح "${userAnswer}" 🎀🍭`);
+      message.reply(
+        `🎉 مبرووووك ${userName}! 😍❤️‍🔥\nعرفت الإيموجي الصحيح "${userAnswer}" 🎀🍭`
+      );
 
       delete activeGames[threadID];
     }
