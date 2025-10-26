@@ -10,7 +10,7 @@ const mathChallenges = [
   { question: "10 + 15", answer: 25 },
   { question: "12 ÷ 3", answer: 4 },
   { question: "14 + 6", answer: 20 },
-  { question: "100 - 99", answer: 1 }
+  { question: "100 - 99", answer: 1 },
   { question: "4 × 12", answer: 48 },
   { question: "50 ÷ 10", answer: 5 },
   { question: "18 + 23", answer: 41 },
@@ -26,7 +26,6 @@ const mathChallenges = [
   { question: "49 ÷ 7", answer: 7 },
   { question: "19 - 4", answer: 15 },
   { question: "6 × 6", answer: 36 }
-  // المسائل الإضافية تنتهي هنا 👆
 ];
 
 let activeGames = {}; // حفظ التحديات النشطة
@@ -35,7 +34,7 @@ module.exports = {
   config: {
     name: "رياضيات",
     aliases: ["رياضيات", "حساب"],
-    version: "1.1",
+    version: "1.2",
     author: "عبودي & Elhamy 🎀",
     countDown: 5,
     role: 0,
@@ -57,7 +56,7 @@ module.exports = {
     activeGames[threadID] = random.answer;
 
     message.reply(
-      `🧮🎀 تحدي رياضيييات!!  
+      `🧮🎀 تحدي رياضيات!!  
 احسب بسرعة يا عبقري:  
 👉 **${random.question}** 👈  
 أول واحد يجاوب صح يفوز 🎀🍭`
@@ -73,8 +72,8 @@ module.exports = {
     }, 15000);
   },
 
-  // مراقبة الرسائل (للتحقق من الإجابات)
-  onChat: async function ({ event, message, api }) {
+  // مراقبة الرسائل (استبدلنا onChat بـ onMessage)
+  onMessage: async function ({ event, message, api }) {
     const threadID = event.threadID;
     const userName = event.senderID;
 
